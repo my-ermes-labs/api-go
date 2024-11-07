@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 
-	"github.com/ermes-labs/api-go/infrastructure"
+	"github.com/my-ermes-labs/api-go/infrastructure"
 )
 
 type ResourcesUsage = map[string]float64
