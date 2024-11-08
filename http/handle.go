@@ -2,10 +2,11 @@ package http
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/my-ermes-labs/api-go/api"
-	logger "github.com/my-ermes-labs/log"
 )
 
 func CreateHandler(
@@ -17,6 +18,27 @@ func CreateHandler(
 	return func(w http.ResponseWriter, req *http.Request) {
 		Handle(n, w, req, opt, handler)
 	}
+}
+
+func Handlee(
+	n *api.Node,
+	w http.ResponseWriter,
+	req *http.Request,
+	opt HandlerOptions,
+	handler func(w http.ResponseWriter, req *http.Request, sessionToken api.SessionToken) error) {
+
+	sessionToken := api.NewSessionToken(api.NewSessionLocation("host", "string"))
+	err := os.Setenv("SESSION_TOKEN_ID", sessionToken.SessionId)
+	if err != nil {
+		fmt.Println("Errore nell'impostare la variabile di ambiente:", err)
+	}
+
+	err = os.Setenv("SESSION_TOKEN_HOST", sessionToken.Host)
+	if err != nil {
+		fmt.Println("Errore nell'impostare la variabile di ambiente:", err)
+	}
+
+	handler(w, req, sessionToken)
 }
 
 // This function handle the full lifecycle of a request, and allow to provide a
@@ -31,14 +53,13 @@ func CreateHandler(
 //     1.2. The callback returns nil and the response is returned.
 //  2. The session has been offloaded and the callback is not run.
 //  3. There is an error and the callback is not run.
+
 func Handle(
 	n *api.Node,
 	w http.ResponseWriter,
 	req *http.Request,
 	opt HandlerOptions,
 	handler func(w http.ResponseWriter, req *http.Request, sessionToken api.SessionToken) error) {
-	log, _ := logger.NewLogger("/var/lib/faasd/functions", "handle_log.txt")
-	log.AppendLog("START LOG")
 
 	// os.Setenv("SESSION_TOKEN_ID_PRE", "sessionToken.SessionId")
 
@@ -47,16 +68,21 @@ func Handle(
 	// If there is a session token and it belongs to a dummy client that ws not
 	sessionToken, err := api.UnmarshallSessionToken(sessionTokenBytes)
 
-	log.AppendLog("SESSION_TOKEN_ID = " + sessionToken.SessionId)
-	log.AppendLog("SESSION_TOKEN_HOST = " + sessionToken.Host)
-	// os.Setenv("SESSION_TOKEN_ID", sessionToken.SessionId)
-	// os.Setenv("SESSION_TOKEN_HOST", sessionToken.Host)
-
 	// If there is an error, return an error response.
 	if err != nil {
 		opt.malformedSessionTokenErrorResponse(w, err)
 		return
 	}
+
+	// err = os.Setenv("SESSION_TOKEN_ID", sessionToken.SessionId)
+	// if err != nil {
+	// 	fmt.Println("Errore nell'impostare la variabile di ambiente:", err)
+	// }
+
+	// err = os.Setenv("SESSION_TOKEN_HOST", sessionToken.Host)
+	// if err != nil {
+	// 	fmt.Println("Errore nell'impostare la variabile di ambiente:", err)
+	// }
 
 	// If there is a session token and it belongs to a dummy client that was not
 	// able to make the request to the correct node, redirect the request to the
