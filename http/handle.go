@@ -37,12 +37,13 @@ func Handle(
 	req *http.Request,
 	opt HandlerOptions,
 	handler func(w http.ResponseWriter, req *http.Request, sessionToken api.SessionToken) error) {
-	os.Setenv("SESSION_TOKEN_ID", "sessionToken.SessionId")
+	os.Setenv("SESSION_TOKEN_ID_PRE", "sessionToken.SessionId")
 	// Try to get the session token from the request.
 	sessionTokenBytes := opt.getSessionTokenBytes(req)
 	// If there is a session token and it belongs to a dummy client that ws not
 	sessionToken, err := api.UnmarshallSessionToken(sessionTokenBytes)
 
+	os.Setenv("SESSION_TOKEN_ID", sessionToken.SessionId)
 	os.Setenv("SESSION_TOKEN_HOST", sessionToken.Host)
 
 	// If there is an error, return an error response.
