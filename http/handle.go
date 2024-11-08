@@ -3,6 +3,7 @@ package http
 import (
 	"context"
 	"net/http"
+	"os"
 
 	"github.com/my-ermes-labs/api-go/api"
 )
@@ -40,6 +41,9 @@ func Handle(
 	sessionTokenBytes := opt.getSessionTokenBytes(req)
 	// If there is a session token and it belongs to a dummy client that ws not
 	sessionToken, err := api.UnmarshallSessionToken(sessionTokenBytes)
+
+	os.Setenv("SESSION_TOKEN_ID", sessionToken.SessionId)
+	os.Setenv("SESSION_TOKEN_HOST", sessionToken.Host)
 
 	// If there is an error, return an error response.
 	if err != nil {

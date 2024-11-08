@@ -1,4 +1,4 @@
-<div align="center">
+<!-- <div align="center">
   
 <br>
 
@@ -17,4 +17,4 @@ Golang **API** of the [`Ermes`](https://ermes-labs.github.io/docs) framework
 
 # Introduction 📖
 
-Ermes *(Edge-to-Cloud Resource Management for Enhanced Session-based applications)*
+Ermes *(Edge-to-Cloud Resource Management for Enhanced Session-based applications)* -->
