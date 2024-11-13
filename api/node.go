@@ -1,6 +1,6 @@
 package api
 
-import "github.com/my-ermes-labs/api-go/infrastructure"
+import "github.com/ermes-labs/api-go/infrastructure"
 
 type Node struct {
 	Cmd Commands

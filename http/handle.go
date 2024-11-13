@@ -2,11 +2,9 @@ package http
 
 import (
 	"context"
-	"fmt"
 	"net/http"
-	"os"
 
-	"github.com/my-ermes-labs/api-go/api"
+	"github.com/ermes-labs/api-go/api"
 )
 
 func CreateHandler(
@@ -18,26 +16,6 @@ func CreateHandler(
 	return func(w http.ResponseWriter, req *http.Request) {
 		Handle(n, w, req, opt, handler)
 	}
-}
-
-func Handlee(
-	n *api.Node,
-	w http.ResponseWriter,
-	req *http.Request,
-	opt HandlerOptions,
-	handler func(w http.ResponseWriter, req *http.Request, sessionToken api.SessionToken) error) {
-
-	sessionToken := api.NewSessionToken(api.NewSessionLocation("host", "string"))
-	err := os.Setenv("SESSION_TOKEN_ID", sessionToken.SessionId)
-	if err != nil {
-		fmt.Println("Errore nell'impostare la variabile di ambiente:", err)
-	}
-
-	err = os.Setenv("SESSION_TOKEN_HOST", sessionToken.Host)
-	if err != nil {
-		fmt.Println("Errore nell'impostare la variabile di ambiente:", err)
-	}
-
 }
 
 // This function handle the full lifecycle of a request, and allow to provide a
@@ -52,16 +30,12 @@ func Handlee(
 //     1.2. The callback returns nil and the response is returned.
 //  2. The session has been offloaded and the callback is not run.
 //  3. There is an error and the callback is not run.
-
 func Handle(
 	n *api.Node,
 	w http.ResponseWriter,
 	req *http.Request,
 	opt HandlerOptions,
 	handler func(w http.ResponseWriter, req *http.Request, sessionToken api.SessionToken) error) {
-
-	// os.Setenv("SESSION_TOKEN_ID_PRE", "sessionToken.SessionId")
-
 	// Try to get the session token from the request.
 	sessionTokenBytes := opt.getSessionTokenBytes(req)
 	// If there is a session token and it belongs to a dummy client that ws not
@@ -72,16 +46,6 @@ func Handle(
 		opt.malformedSessionTokenErrorResponse(w, err)
 		return
 	}
-
-	// err = os.Setenv("SESSION_TOKEN_ID", sessionToken.SessionId)
-	// if err != nil {
-	// 	fmt.Println("Errore nell'impostare la variabile di ambiente:", err)
-	// }
-
-	// err = os.Setenv("SESSION_TOKEN_HOST", sessionToken.Host)
-	// if err != nil {
-	// 	fmt.Println("Errore nell'impostare la variabile di ambiente:", err)
-	// }
 
 	// If there is a session token and it belongs to a dummy client that was not
 	// able to make the request to the correct node, redirect the request to the

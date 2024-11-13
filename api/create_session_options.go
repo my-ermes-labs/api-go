@@ -3,7 +3,7 @@ package api
 import (
 	"time"
 
-	"github.com/my-ermes-labs/api-go/infrastructure"
+	"github.com/ermes-labs/api-go/infrastructure"
 )
 
 // Options that defines how a session is created.

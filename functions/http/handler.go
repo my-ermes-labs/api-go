@@ -3,7 +3,7 @@ package http_functions
 import (
 	"net/http"
 
-	"github.com/my-ermes-labs/api-go/api"
+	"github.com/ermes-labs/api-go/api"
 )
 
 type Handler struct {

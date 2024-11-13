@@ -3,8 +3,8 @@ package triggered_functions
 import (
 	"context"
 
-	"github.com/my-ermes-labs/api-go/api"
-	http_functions "github.com/my-ermes-labs/api-go/functions/http"
+	"github.com/ermes-labs/api-go/api"
+	http_functions "github.com/ermes-labs/api-go/functions/http"
 )
 
 var bestOffloadTargetsOptions = api.DefaultBestOffloadTargetsOptions()

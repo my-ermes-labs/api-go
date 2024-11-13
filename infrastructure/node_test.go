@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/my-ermes-labs/api-go/infrastructure"
+	"github.com/ermes-labs/api-go/infrastructure"
 )
 
 func TestInvalidGeoCoordinates(t *testing.T) {

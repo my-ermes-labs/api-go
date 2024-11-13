@@ -4,7 +4,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/my-ermes-labs/api-go/api"
+	"github.com/ermes-labs/api-go/api"
 )
 
 var n1 api.Node

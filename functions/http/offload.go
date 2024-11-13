@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/my-ermes-labs/api-go/api"
+	"github.com/ermes-labs/api-go/api"
 )
 
 var (
