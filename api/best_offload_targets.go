@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 
-	"github.com/ermes-labs/api-go/infrastructure"
+	"github.com/my-ermes-labs/api-go/infrastructure"
 )
 
 // The information related to a session that are used to decide the best offload

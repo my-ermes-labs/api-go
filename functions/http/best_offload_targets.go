@@ -8,7 +8,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/ermes-labs/api-go/api"
+	"github.com/my-ermes-labs/api-go/api"
 )
 
 var (
