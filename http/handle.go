@@ -38,7 +38,6 @@ func Handlee(
 		fmt.Println("Errore nell'impostare la variabile di ambiente:", err)
 	}
 
-	handler(w, req, sessionToken)
 }
 
 // This function handle the full lifecycle of a request, and allow to provide a
