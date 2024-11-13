@@ -3,6 +3,7 @@ package http
 import (
 	"context"
 	"net/http"
+	"os"
 
 	"github.com/my-ermes-labs/api-go/api"
 )
@@ -36,6 +37,9 @@ func Handle(
 	req *http.Request,
 	opt HandlerOptions,
 	handler func(w http.ResponseWriter, req *http.Request, sessionToken api.SessionToken) error) {
+
+	os.Setenv("VARIABLE", "EMPTY")
+
 	// Try to get the session token from the request.
 	sessionTokenBytes := opt.getSessionTokenBytes(req)
 	// If there is a session token and it belongs to a dummy client that ws not
@@ -43,6 +47,7 @@ func Handle(
 
 	// If there is an error, return an error response.
 	if err != nil {
+		os.Setenv("VARIABLE", "LINE 49")
 		opt.malformedSessionTokenErrorResponse(w, err)
 		return
 	}
@@ -51,7 +56,9 @@ func Handle(
 	// able to make the request to the correct node, redirect the request to the
 	// correct node.
 	if sessionToken != nil {
+		os.Setenv("VARIABLE", "LINE 58")
 		if redirect, destination := dummyClientNeedsRedirect(n, req.Context(), sessionToken); redirect {
+			os.Setenv("VARIABLE", "LINE 60")
 			// Set the session sessionToken in the response.
 			opt.setSessionTokenBytes(w, sessionTokenBytes)
 			// Create the redirect response.
@@ -63,8 +70,10 @@ func Handle(
 
 	// If the client does not already have a session.
 	if sessionToken == nil {
+		os.Setenv("VARIABLE", "LINE 72")
 		// If the node must redirect new requests, redirect the request.
 		if opt.redirectNewRequest(req, n) {
+			os.Setenv("VARIABLE", "LINE 75")
 			// Get the host to redirect the request to.
 			host := opt.redirectTarget(req, n)
 			// Create the redirect response.
@@ -75,6 +84,7 @@ func Handle(
 	}
 
 	if sessionToken == nil {
+		os.Setenv("VARIABLE", "LINE 86")
 		// Create a new session and acquire it to run the handler callback,
 		// then update the session token.
 		_, err = n.CreateAndAcquireSession(
@@ -98,6 +108,7 @@ func Handle(
 				return handler(w, req, sessionToken)
 			})
 	} else {
+		os.Setenv("VARIABLE", "LINE 110")
 		var newToken *api.SessionToken = nil
 		// Acquire the session.
 		newToken, err = n.AcquireSession(
@@ -114,6 +125,7 @@ func Handle(
 
 		// If the session has been offloaded, redirect the request.
 		if err == nil && newToken != nil {
+			os.Setenv("VARIABLE", "LINE 127")
 			// Set the session token in the response.
 			opt.setSessionTokenBytes(w, sessionTokenBytes)
 			// Create the redirect response.
@@ -123,6 +135,7 @@ func Handle(
 
 	// If there is an error, return an error response.
 	if err != nil {
+		os.Setenv("VARIABLE", "LINE 137")
 		// Create the internal server error response.
 		opt.internalServerErrorResponse(w, err)
 		// Return.
