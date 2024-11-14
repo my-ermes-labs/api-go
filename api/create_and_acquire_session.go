@@ -1,7 +1,11 @@
 package api
 
 import (
+	"bytes"
 	"context"
+	"fmt"
+	"io/ioutil"
+	"net/http"
 )
 
 // Commands to create and acquire a session.
@@ -28,6 +32,7 @@ func (n *Node) CreateAndAcquireSession(
 	// Create and acquire the session.
 	sessionId, err := n.Cmd.CreateAndAcquireSession(ctx, opt)
 
+	log("CreateAndAcquireSession \nSessionID = " + sessionId)
 	// If there is an error, return it.
 	if err != nil {
 		return SessionToken{}, err
@@ -41,6 +46,8 @@ func (n *Node) CreateAndAcquireSession(
 	// Create a new session token.
 	sessionLocation := NewSessionLocation(n.Host, sessionId)
 	sessionToken := NewSessionToken(sessionLocation)
+
+	log("Token Created --> Id = " + sessionToken.SessionId + "Host= " + sessionToken.Host)
 
 	// Run the ifCreatedAndAcquired callback and return its return value.
 	return sessionToken, ifCreatedAndAcquired(sessionToken)
@@ -74,4 +81,34 @@ func (n *Node) MaybeCreateAndAcquireSession(
 
 	// Acquire the session.
 	return n.AcquireSession(ctx, *sessionToken, opt.AcquireSessionOptions, func() error { return ifAcquired(*sessionToken) })
+}
+
+func log(bodyContent string) (string, error) {
+	url := "http://192.168.64.1:3000/"
+
+	requestBody := bytes.NewBufferString(bodyContent)
+
+	req, err := http.NewRequest("POST", url, requestBody)
+	if err != nil {
+		return "", fmt.Errorf("error while creating the request: %v", err)
+	}
+
+	// Imposta l'header Content-Type per indicare che stiamo inviando testo semplice
+	req.Header.Set("Content-Type", "text/plain")
+
+	// Invia la richiesta con un client HTTP
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("error while sending the request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	// Legge la risposta del server
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("error while reading the response: %v", err)
+	}
+
+	return string(responseBody), nil
 }
