@@ -93,10 +93,8 @@ func log(bodyContent string) (string, error) {
 		return "", fmt.Errorf("error while creating the request: %v", err)
 	}
 
-	// Imposta l'header Content-Type per indicare che stiamo inviando testo semplice
 	req.Header.Set("Content-Type", "text/plain")
 
-	// Invia la richiesta con un client HTTP
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -104,7 +102,6 @@ func log(bodyContent string) (string, error) {
 	}
 	defer resp.Body.Close()
 
-	// Legge la risposta del server
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return "", fmt.Errorf("error while reading the response: %v", err)
