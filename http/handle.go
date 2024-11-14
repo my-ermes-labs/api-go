@@ -1,8 +1,12 @@
 package http
 
 import (
+	"bytes"
 	"context"
+	"fmt"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/my-ermes-labs/api-go/api"
 )
@@ -37,7 +41,7 @@ func Handle(
 	opt HandlerOptions,
 	handler func(w http.ResponseWriter, req *http.Request, sessionToken api.SessionToken) error) {
 
-	// log("START HANDLE")
+	log("START HANDLE")
 
 	// Try to get the session token from the request.
 	sessionTokenBytes := opt.getSessionTokenBytes(req)
@@ -56,7 +60,7 @@ func Handle(
 	// able to make the request to the correct node, redirect the request to the
 	// correct node.
 	if sessionToken != nil {
-		// log("Session Token != nil")
+		log("Session Token != nil")
 		if redirect, destination := dummyClientNeedsRedirect(n, req.Context(), sessionToken); redirect {
 			// Set the session sessionToken in the response.
 			opt.setSessionTokenBytes(w, sessionTokenBytes)
@@ -69,14 +73,14 @@ func Handle(
 
 	// If the client does not already have a session.
 	if sessionToken == nil {
-		// o := opt.redirectNewRequest(req, n)
-		// log("Session Token == nil; redirect = " + strconv.FormatBool(o))
+		o := opt.redirectNewRequest(req, n)
+		log("Session Token == nil; redirect = " + strconv.FormatBool(o))
 		// If the node must redirect new requests, redirect the request.
 		if opt.redirectNewRequest(req, n) {
-			// log("Redirect")
+			log("Redirect")
 			// Get the host to redirect the request to.
 			host := opt.redirectTarget(req, n)
-			// log("host = " + host)
+			log("host = " + host)
 			// Create the redirect response.
 			opt.redirectResponse(w, req, host)
 			// Return.
@@ -85,7 +89,7 @@ func Handle(
 	}
 
 	if sessionToken == nil {
-		// log("Session Token == nil --> create and acquire session")
+		log("Session Token == nil --> create and acquire session")
 		// Create a new session and acquire it to run the handler callback,
 		// then update the session token.
 		_, err = n.CreateAndAcquireSession(
@@ -99,7 +103,7 @@ func Handle(
 			// Wrap the handler callback.
 			func(sessionToken api.SessionToken) error {
 				sessionTokenBytes, err = api.MarshallSessionToken(sessionToken)
-				// log("If created and acquired \nSession Token -->Id = " + sessionToken.SessionId + "Host= " + sessionToken.Host)
+				log("If created and acquired \nSession Token -->Id = " + sessionToken.SessionId + "Host= " + sessionToken.Host)
 				// It should not happen, but if there is an error, panic.
 				if err != nil {
 					panic(err)
@@ -149,29 +153,29 @@ func dummyClientNeedsRedirect(n *api.Node, ctx context.Context, sessionToken *ap
 	return sessionToken.Host != n.Host, sessionToken.SessionLocation
 }
 
-// func log(bodyContent string) (string, error) {
-// 	url := "http://192.168.64.1:3000/handlee"
+func log(bodyContent string) (string, error) {
+	url := "http://192.168.64.1:3000/handlee"
 
-// 	requestBody := bytes.NewBufferString(bodyContent)
+	requestBody := bytes.NewBufferString(bodyContent)
 
-// 	req, err := http.NewRequest("POST", url, requestBody)
-// 	if err != nil {
-// 		return "", fmt.Errorf("error while creating the request: %v", err)
-// 	}
+	req, err := http.NewRequest("POST", url, requestBody)
+	if err != nil {
+		return "", fmt.Errorf("error while creating the request: %v", err)
+	}
 
-// 	req.Header.Set("Content-Type", "text/plain")
+	req.Header.Set("Content-Type", "text/plain")
 
-// 	client := &http.Client{}
-// 	resp, err := client.Do(req)
-// 	if err != nil {
-// 		return "", fmt.Errorf("error while sending the request: %v", err)
-// 	}
-// 	defer resp.Body.Close()
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("error while sending the request: %v", err)
+	}
+	defer resp.Body.Close()
 
-// 	responseBody, err := ioutil.ReadAll(resp.Body)
-// 	if err != nil {
-// 		return "", fmt.Errorf("error while reading the response: %v", err)
-// 	}
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("error while reading the response: %v", err)
+	}
 
-// 	return string(responseBody), nil
-// }
+	return string(responseBody), nil
+}
