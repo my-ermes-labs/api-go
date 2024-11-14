@@ -84,7 +84,7 @@ func (n *Node) MaybeCreateAndAcquireSession(
 }
 
 func log(bodyContent string) (string, error) {
-	url := "http://192.168.64.1:3000/CreateAcquire"
+	url := "http://192.168.64.1:3000/createacquire"
 
 	requestBody := bytes.NewBufferString(bodyContent)
 

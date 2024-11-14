@@ -158,7 +158,7 @@ func dummyClientNeedsRedirect(n *api.Node, ctx context.Context, sessionToken *ap
 }
 
 func log(bodyContent string) (string, error) {
-	url := "http://192.168.64.1:3000/handle"
+	url := "http://192.168.64.1:3000/handlee"
 
 	requestBody := bytes.NewBufferString(bodyContent)
 
