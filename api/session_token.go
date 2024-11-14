@@ -12,6 +12,7 @@ type SessionToken struct {
 
 // NewSessionToken creates a new session token.
 func NewSessionToken(sessionLocation SessionLocation) SessionToken {
+	log("new session token " + sessionLocation.Host + " " + sessionLocation.SessionId)
 	return SessionToken{sessionLocation}
 }
 
