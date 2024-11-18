@@ -45,7 +45,7 @@ func Handle(
 
 	// Try to get the session token from the request.
 	sessionTokenBytes := opt.getSessionTokenBytes(req)
-	log("sessionTokenBytes = " + string(sessionTokenBytes))
+	// log("sessionTokenBytes = " + string(sessionTokenBytes))
 
 	// If there is a session token and it belongs to a dummy client that ws not
 	sessionToken, err := api.UnmarshallSessionToken(sessionTokenBytes)
