@@ -49,7 +49,7 @@ func Handle(
 
 	// If there is a session token and it belongs to a dummy client that ws not
 	sessionToken, err := api.UnmarshallSessionToken(sessionTokenBytes)
-	log("TOKEN: \nHost = " + sessionToken.Host + "\nId = " + sessionToken.SessionId + "\nLocation Host = " + sessionToken.SessionLocation.Host + "\nLocation Id = " + sessionToken.SessionLocation.SessionId)
+	// log("TOKEN: \nHost = " + sessionToken.Host + "\nId = " + sessionToken.SessionId + "\nLocation Host = " + sessionToken.SessionLocation.Host + "\nLocation Id = " + sessionToken.SessionLocation.SessionId)
 
 	// If there is an error, return an error response.
 	if err != nil {
@@ -104,7 +104,7 @@ func Handle(
 			// Wrap the handler callback.
 			func(sessionToken api.SessionToken) error {
 				sessionTokenBytes, err = api.MarshallSessionToken(sessionToken)
-				log("If created and acquired \nSession Token -->Id = " + sessionToken.SessionId + "Host= " + sessionToken.Host)
+				log("If created and acquired \nSession Token -->Id = " + sessionToken.SessionId + "\nHost= " + sessionToken.Host)
 				// It should not happen, but if there is an error, panic.
 				if err != nil {
 					panic(err)
