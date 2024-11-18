@@ -45,10 +45,11 @@ func Handle(
 
 	// Try to get the session token from the request.
 	sessionTokenBytes := opt.getSessionTokenBytes(req)
+	log("sessionTokenBytes = " + string(sessionTokenBytes))
 
 	// If there is a session token and it belongs to a dummy client that ws not
 	sessionToken, err := api.UnmarshallSessionToken(sessionTokenBytes)
-	// log("TOKEN: \nHost = " + sessionToken.Host + "\nId = " + sessionToken.SessionId + "\nLocation Host = " + sessionToken.SessionLocation.Host + "\nLocation Id = " + sessionToken.SessionLocation.SessionId)
+	log("TOKEN: \nHost = " + sessionToken.Host + "\nId = " + sessionToken.SessionId + "\nLocation Host = " + sessionToken.SessionLocation.Host + "\nLocation Id = " + sessionToken.SessionLocation.SessionId)
 
 	// If there is an error, return an error response.
 	if err != nil {
