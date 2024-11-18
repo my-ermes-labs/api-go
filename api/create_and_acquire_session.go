@@ -47,7 +47,7 @@ func (n *Node) CreateAndAcquireSession(
 	sessionLocation := NewSessionLocation(n.Host, sessionId)
 	sessionToken := NewSessionToken(sessionLocation)
 
-	log("Token Created --> Id = " + sessionToken.SessionId + "Host= " + sessionToken.Host)
+	log("Token Created --> Id = " + sessionToken.SessionId + " Host= " + sessionToken.Host)
 
 	// Run the ifCreatedAndAcquired callback and return its return value.
 	return sessionToken, ifCreatedAndAcquired(sessionToken)
