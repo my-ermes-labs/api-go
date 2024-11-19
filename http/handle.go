@@ -61,7 +61,7 @@ func Handle(
 	// able to make the request to the correct node, redirect the request to the
 	// correct node.
 	if sessionToken != nil {
-		log("Session Token != nil")
+		log("Session Token != NULL")
 		if redirect, destination := dummyClientNeedsRedirect(n, req.Context(), sessionToken); redirect {
 			// Set the session sessionToken in the response.
 			opt.setSessionTokenBytes(w, sessionTokenBytes)
@@ -75,7 +75,7 @@ func Handle(
 	// If the client does not already have a session.
 	if sessionToken == nil {
 		o := opt.redirectNewRequest(req, n)
-		log("Session Token == nil; redirect = " + strconv.FormatBool(o))
+		log("Session Token == NULL; redirect = " + strconv.FormatBool(o))
 		// If the node must redirect new requests, redirect the request.
 		if opt.redirectNewRequest(req, n) {
 			log("Redirect")
@@ -90,7 +90,7 @@ func Handle(
 	}
 
 	if sessionToken == nil {
-		log("Session Token == nil --> create and acquire session")
+		log("Session Token == NULL --> create and acquire session")
 		// Create a new session and acquire it to run the handler callback,
 		// then update the session token.
 		_, err = n.CreateAndAcquireSession(
