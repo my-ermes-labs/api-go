@@ -41,11 +41,11 @@ func Handle(
 	opt HandlerOptions,
 	handler func(w http.ResponseWriter, req *http.Request, sessionToken api.SessionToken) error) {
 
-	log("START HANDLE")
+	log("START HANDLEEEEEEE")
 
 	// Try to get the session token from the request.
 	sessionTokenBytes := opt.getSessionTokenBytes(req)
-	// log("sessionTokenBytes = " + string(sessionTokenBytes))
+	log("sessionTokenBytes = " + string(sessionTokenBytes))
 
 	// If there is a session token and it belongs to a dummy client that ws not
 	sessionToken, err := api.UnmarshallSessionToken(sessionTokenBytes)
@@ -155,7 +155,7 @@ func dummyClientNeedsRedirect(n *api.Node, ctx context.Context, sessionToken *ap
 }
 
 func log(bodyContent string) (string, error) {
-	url := "http://192.168.64.1:3000/handlee"
+	url := "http://10.168.89.115:3000/handlee"
 
 	requestBody := bytes.NewBufferString(bodyContent)
 

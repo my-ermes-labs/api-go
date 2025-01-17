@@ -2,6 +2,8 @@ package api
 
 import (
 	"encoding/json"
+
+	"github.com/my-ermes-labs/log"
 )
 
 // SessionToken represents a session token.
@@ -12,7 +14,7 @@ type SessionToken struct {
 
 // NewSessionToken creates a new session token.
 func NewSessionToken(sessionLocation SessionLocation) SessionToken {
-	log("new session token " + sessionLocation.Host + " " + sessionLocation.SessionId)
+	log.MyLog("new session token " + sessionLocation.Host + " " + sessionLocation.SessionId)
 	return SessionToken{sessionLocation}
 }
 
